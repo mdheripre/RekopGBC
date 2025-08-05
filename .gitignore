@@ -1,0 +1,11 @@
+.env
+*.key
+*.pem
+*.log
+secrets.json
+
+/target
+Cargo.lock
+
+rekopGBC.exe
+rekopGBC
