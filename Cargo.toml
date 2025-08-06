@@ -1,5 +1,5 @@
 [package]
-name = "RekopGBC"
+name = "rekop_gbc"
 version = "0.1.0"
 authors = ["mdheripre"]
 edition = "2021"
