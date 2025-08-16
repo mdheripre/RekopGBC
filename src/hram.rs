@@ -3,7 +3,7 @@ pub const HRAM_START: u16 = 0xFF80;
 pub const HRAM_END: u16 = 0xFFFE;
 
 pub struct Hram {
-    bytes: Vec<u8>
+    bytes: Vec<u8>,
 }
 
 impl Hram {

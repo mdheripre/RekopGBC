@@ -13,7 +13,7 @@ pub struct Gpu {
 impl Gpu {
     pub fn new() -> Gpu {
         Gpu {
-            bytes: vec![0; VRAM_SIZE + OAM_SIZE]
+            bytes: vec![0; VRAM_SIZE + OAM_SIZE],
         }
     }
 

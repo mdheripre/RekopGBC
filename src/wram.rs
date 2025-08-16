@@ -31,7 +31,7 @@ impl Wram {
                 let offset = (address - 0xD00) as usize;
                 self.banks[self.current_bank][offset]
             }
-            _ => panic!("Invalid WRAM address")
+            _ => panic!("Invalid WRAM address"),
         }
     }
 }

@@ -10,7 +10,7 @@ pub const ERAM_START: u16 = 0xA000;
 pub const ERAM_END: u16 = 0xBFFF; // 8KB
 
 pub struct Rom {
-    bytes: Vec<u8>
+    bytes: Vec<u8>,
 }
 
 pub fn load(path: String) -> Rom {
