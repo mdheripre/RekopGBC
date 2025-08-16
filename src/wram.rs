@@ -21,5 +21,17 @@ impl Wram {
         }
     }
 
-    pub fn read(&self, address: u16) -> u8 {}
+    pub fn read(&self, address: u16) -> u8 {
+        match address {
+            0xC00..=0xCFFF => {
+                let offset = (address - 0xC00) as usize;
+                self.banks[0][offset]
+            }
+            0xD00..=0xDFFF => {
+                let offset = (address - 0xD00) as usize;
+                self.banks[self.current_bank][offset]
+            }
+            _ => panic!("Invalid WRAM address")
+        }
+    }
 }
