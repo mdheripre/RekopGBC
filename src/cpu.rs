@@ -1,14 +1,17 @@
 use crate::mmu::MMU;
 use crate::registers::Registers;
+use crate::rom::Rom;
 
 pub struct CPU {
     regs: Registers,
+    pub mmu: MMU,
 }
 
 impl CPU {
-    pub fn new() -> CPU {
+    pub fn new(rom: Rom) -> CPU {
         CPU {
             regs: Registers::new(),
+            mmu: MMU::new(rom),
         }
     }
 

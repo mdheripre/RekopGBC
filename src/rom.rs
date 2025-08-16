@@ -13,7 +13,7 @@ pub struct Rom {
     bytes: Vec<u8>,
 }
 
-pub fn load(path: String) -> Rom {
+pub fn load(path: &str) -> Rom {
     let mut buffer = Vec::new();
     let mut file = File::open(path).expect("Invalid ROM path");
     file.read_to_end(&mut buffer).expect("Unable to read ROM");

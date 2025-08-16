@@ -36,19 +36,19 @@ impl Registers {
         }
     }
 
-    pub fn af(&self) ->u16 {
+    pub fn af(&self) -> u16 {
         ((self.a as u16) << 8) | ((self.f & 0xF0) as u16)
     }
 
-    pub fn bc(&self) ->u16 {
+    pub fn bc(&self) -> u16 {
         ((self.b as u16) << 8) | ((self.c & 0xF0) as u16)
     }
 
-    pub fn de(&self) ->u16 {
+    pub fn de(&self) -> u16 {
         ((self.d as u16) << 8) | ((self.e & 0xF0) as u16)
     }
 
-    pub fn hl(&self) ->u16 {
+    pub fn hl(&self) -> u16 {
         ((self.h as u16) << 8) | ((self.l & 0xF0) as u16)
     }
 

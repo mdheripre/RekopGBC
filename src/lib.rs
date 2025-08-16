@@ -1,3 +1,5 @@
+pub mod device;
+
 mod cpu;
 mod gpu;
 mod hram;
