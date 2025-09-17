@@ -1,6 +1,7 @@
 use crate::mmu::MMU;
 use crate::registers::Registers;
 use crate::rom::Rom;
+use crate::Result;
 
 pub struct CPU {
     regs: Registers,
@@ -15,9 +16,9 @@ impl CPU {
         }
     }
 
-    fn next_byte(&mut self, memory: &MMU) -> u8 {
-        let byte = memory.read(self.regs.pc as u16);
+    fn next_byte(&mut self, memory: &MMU) -> Result<u8> {
+        let byte = memory.read(self.regs.pc)?;
         self.regs.pc = self.regs.pc.wrapping_add(1);
-        byte
+        Ok(byte)
     }
 }
