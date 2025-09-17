@@ -14,7 +14,7 @@ pub struct Registers {
 }
 
 #[derive(Copy, Clone)]
-pub enum CpuFlags {
+pub enum CpuFlag {
     C = 0b00010000,
     H = 0b00100000,
     N = 0b01000000,
@@ -23,7 +23,7 @@ pub enum CpuFlags {
 
 impl Registers {
     pub fn new() -> Registers {
-        use CpuFlags::*;
+        use CpuFlag::*;
         Registers {
             a: 0x01,
             b: 0x00,
@@ -33,8 +33,8 @@ impl Registers {
             f: C as u8 | H as u8 | Z as u8,
             h: 0x01,
             l: 0x4D,
-            sp: 0xFFFE,
             pc: 0x0100,
+            sp: 0xFFFE,
         }
     }
 
@@ -52,6 +52,12 @@ impl Registers {
 
     pub fn hl(&self) -> u16 {
         ((self.h as u16) << 8) | ((self.l & 0xF0) as u16)
+    }
+
+    pub fn hli(&mut self) -> u16 {
+        let res = self.hl();
+        self.sethl(res + 1);
+        res
     }
 
     pub fn setaf(&mut self, value: u16) {
@@ -72,5 +78,23 @@ impl Registers {
     pub fn sethl(&mut self, value: u16) {
         self.h = (value >> 8) as u8;
         self.l = (value & 0x00FF) as u8;
+    }
+
+    pub fn flag(&mut self, flags: CpuFlag, set: bool) {
+        let mask = flags as u8;
+        match set {
+            true => self.f |= mask,
+            false => self.f &= !mask,
+        }
+        self.f &= 0xF0;
+    }
+
+    pub fn get_flag(&self, flags: CpuFlag) -> bool {
+        let mask = flags as u8;
+        self.f & mask > 0
+    }
+
+    pub fn setf(&mut self, flags: u8) {
+        self.f = flags & 0xF0;
     }
 }

@@ -20,15 +20,15 @@ pub enum CpuError {
 
     #[error("Stack overflow")]
     StackOverflow,
+
+    #[error("UnknownOpcode {0:#04X}")]
+    UnknownOpcode(u8),
 }
 
 #[derive(Debug, thiserror::Error)]
 pub enum MmuError {
     #[error("Stack underflow")]
     StackUnderflow,
-
-    #[error("Invalid memory read at address {0:#04X}")]
-    InvalidMemoryRead(u16),
 }
 
 #[derive(Debug, thiserror::Error)]
