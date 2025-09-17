@@ -1,6 +1,7 @@
 pub mod device;
-
+pub use crate::error::{EmulatorError, Result};
 mod cpu;
+mod error;
 mod gpu;
 mod hram;
 mod mmu;

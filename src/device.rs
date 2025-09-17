@@ -1,7 +1,7 @@
 use crate::{
     cpu::CPU,
-    device,
-    rom::{self, Rom},
+    rom::{self},
+    Result,
 };
 
 pub struct Device {
@@ -10,11 +10,11 @@ pub struct Device {
 }
 
 impl Device {
-    pub fn new(romname: &str, save_state: Option<String>) -> Device {
-        let cart = rom::load(romname);
-        Device {
+    pub fn new(romname: &str, save_state: Option<String>) -> Result<Device> {
+        let cart = rom::load(romname)?;
+        Ok(Device {
             cpu: CPU::new(cart),
             save_state,
-        }
+        })
     }
 }
