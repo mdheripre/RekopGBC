@@ -3,7 +3,9 @@ use crate::{
     rom::{self},
     Result,
 };
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct Device {
     cpu: CPU,
     save_state: Option<String>,

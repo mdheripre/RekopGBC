@@ -8,7 +8,11 @@ pub const WRAM_END: u16 = 0xDFFF; // 8KB
 pub const ECHO_START: u16 = 0xE000;
 pub const ECHO_END: u16 = 0xFDFF; // 7.5KB
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
 pub struct Wram {
+    #[serde(with = "BigArray")]
     banks: [[u8; WRAM_BANK_SIZE]; WRAM_BANK_COUNT],
     current_bank: usize,
 }

@@ -5,7 +5,9 @@ pub const VRAM_END: u16 = 0x9FFF;
 const OAM_SIZE: usize = 0xA0; // 160B
 pub const OAM_START: u16 = 0xFE00;
 pub const OAM_END: u16 = 0xFE9F;
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct Gpu {
     bytes: Vec<u8>,
 }

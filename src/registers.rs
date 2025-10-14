@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Clone, Copy)]
 pub struct Registers {
     pub a: u8,
     pub b: u8,

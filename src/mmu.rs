@@ -2,7 +2,9 @@ use crate::gpu::{Gpu, OAM_END, OAM_START, VRAM_END, VRAM_START};
 use crate::hram::{Hram, HRAM_END, HRAM_START};
 use crate::rom::{Rom, ERAM_END, ERAM_START, ROM_BANK_END, ROM_START};
 use crate::wram::{Wram, ECHO_END, ECHO_START, WRAM_END, WRAM_START};
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct MMU {
     rom: Rom,
     gpu: Gpu,
