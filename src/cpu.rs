@@ -1,3 +1,5 @@
+use serde::de::value;
+
 use crate::mmu::MMU;
 use crate::registers::CpuFlag::{C, H, N, Z};
 use crate::registers::Registers;
@@ -6,6 +8,11 @@ use crate::rom::Rom;
 pub struct CPU {
     regs: Registers,
     pub mmu: MMU,
+    halted: bool,
+    halt_bug: bool,
+    ime: bool,
+    setdi: u32,
+    setei: u32,
 }
 
 impl CPU {
@@ -13,7 +20,50 @@ impl CPU {
         CPU {
             regs: Registers::new(),
             mmu: MMU::new(rom),
+            halted: false,
+            halt_bug: false,
+            ime: true,
+            setdi: 0,
+            setei: 0,
         }
+    }
+
+    pub fn do_cycle(&mut self) -> u32 {
+        let ticks = self.do_cycle() * 4;
+        self.mmu.do_cycle(ticks);
+    }
+
+    fn docycle(&mut self) -> u32 {
+        self.updateime();
+        match self.handle_interrupts() {
+            0 => {}
+            n => return n
+        };
+
+        if self.halted {
+            1
+        } else {
+            self.call()
+        }
+    }
+
+    fn updateime(&mut self) {
+        self.setdi = match self.setdi {
+            2 => 1,
+            1 => {
+                self.ime = false;
+                0
+            }
+            _ => 0,
+        };
+        self.setei = match self.setei {
+            2 => 1,
+            1 => {
+                self.ime = true;
+                0
+            }
+            _ => 0,
+        };
     }
 
     fn fetch_byte(&mut self) -> u8 {
@@ -28,7 +78,44 @@ impl CPU {
         w
     }
 
-    fn handle_interrupts(&mut self) {}
+    fn handle_interrupts(&mut self) -> u32 {
+        if self.ime == false && self.halted == false {
+            return  0;
+        }
+
+        let triggered = self.mmu.inte & self.mmu.intf & 0x1F;
+        if triggered == 0 {
+            return 0;
+        }
+
+        self.halted = false;
+        if self.ime == false {
+            return 0;
+        }
+        self.ime = false;
+
+        let n = triggered.trailing_zeros();
+        if n >= 5 {
+            panic!("Invalid interrupt triggered");
+        }
+        self.mmu.intf &= !(1 << n);
+        let pc = self.regs.pc;
+        self.pushstack(pc);
+        self.regs.pc = 0x0040 | ((n as u16) << 3);
+
+        4
+    }
+
+    fn pushstack(&mut self, value: u16) {
+        self.regs.sp = self.regs.sp.wrapping_sub(2);
+        self.mmu.ww(self.regs.sp, value);
+    }
+
+    fn popstack(&mut self) -> u16 {
+        let res = self.mmu.rw(self.regs.sp);
+        self.regs.sp += 2;
+        res
+    }
 
     pub fn step(&mut self) -> usize {
         self.handle_interrupts();

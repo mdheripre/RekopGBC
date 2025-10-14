@@ -8,6 +8,8 @@ pub struct MMU {
     gpu: Gpu,
     wram: Wram,
     hram: Hram,
+    pub inte: u8,
+    pub intf: u8,
 }
 
 impl MMU {
@@ -17,6 +19,8 @@ impl MMU {
             gpu: Gpu::new(),
             wram: Wram::new(),
             hram: Hram::new(),
+            inte: 0,
+            intf: 0,
         }
     }
 
