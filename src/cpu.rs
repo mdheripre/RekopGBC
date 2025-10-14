@@ -37,7 +37,7 @@ impl CPU {
         self.updateime();
         match self.handle_interrupts() {
             0 => {}
-            n => return n
+            n => return n,
         };
 
         if self.halted {
@@ -80,7 +80,7 @@ impl CPU {
 
     fn handle_interrupts(&mut self) -> u32 {
         if self.ime == false && self.halted == false {
-            return  0;
+            return 0;
         }
 
         let triggered = self.mmu.inte & self.mmu.intf & 0x1F;
