@@ -7,4 +7,5 @@ mod hram;
 mod mmu;
 mod registers;
 mod rom;
+mod timer;
 mod wram;
