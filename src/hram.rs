@@ -3,17 +3,19 @@ pub const HRAM_START: u16 = 0xFF80;
 pub const HRAM_END: u16 = 0xFFFE;
 
 pub struct Hram {
-    bytes: Vec<u8>,
+    bytes: [u8; HRAM_SIZE],
 }
 
 impl Hram {
     pub fn new() -> Hram {
         Hram {
-            bytes: vec![0; HRAM_SIZE],
+            bytes: [0; HRAM_SIZE],
         }
     }
 
-    pub fn rb(&self, address: u16) -> u8 {
-        self.bytes[address as usize]
+    pub fn rb(&self, a: u16) -> u8 {
+        self.bytes[a as usize]
     }
+
+    pub fn wb(&mut self, a: u16, v: u8) {}
 }

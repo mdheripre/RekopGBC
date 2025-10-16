@@ -28,7 +28,7 @@ impl CPU {
 
     pub fn do_cycle(&mut self) -> u32 {
         let ticks = self.do_cycle() * 4;
-        self.mmu.do_cycle(ticks);
+        self.mmu.do_cycle(ticks)
     }
 
     fn docycle(&mut self) -> u32 {
@@ -65,7 +65,7 @@ impl CPU {
     }
 
     fn fetch_byte(&mut self) -> u8 {
-        let byte = self.mmu.read(self.regs.pc);
+        let byte = self.mmu.rb(self.regs.pc);
         self.regs.pc = self.regs.pc.wrapping_add(1);
         byte
     }

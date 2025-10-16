@@ -38,4 +38,6 @@ impl Wram {
             _ => panic!("Invalid WRAM address"),
         }
     }
+
+    pub fn wb(&mut self, a: u16, v: u8) {}
 }

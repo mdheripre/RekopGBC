@@ -28,4 +28,6 @@ impl Rom {
     pub fn rb(&self, address: u16) -> u8 {
         self.bytes[address as usize]
     }
+
+    pub fn wb(&mut self, a: u16, v: u8) {}
 }
