@@ -1,14 +1,11 @@
-use serde::{Deserialize, Serialize};
-
-use crate::mmu::MMU;
+use crate::mmu::Mmu;
 use crate::registers::CpuFlag::{C, H, N, Z};
 use crate::registers::Registers;
 use crate::rom::Rom;
 
-#[derive(Serialize, Deserialize)]
 pub struct CPU {
     regs: Registers,
-    pub mmu: MMU,
+    pub mmu: Mmu,
     halted: bool,
     halt_bug: bool,
     ime: bool,
@@ -20,7 +17,7 @@ impl CPU {
     pub fn new(rom: Rom) -> CPU {
         CPU {
             regs: Registers::new(),
-            mmu: MMU::new(rom),
+            mmu: Mmu::new(rom),
             halted: false,
             halt_bug: false,
             ime: true,
