@@ -17,4 +17,8 @@ impl Device {
             save_state,
         })
     }
+
+    pub fn do_cycle(&mut self) -> u32 {
+        self.cpu.do_cycle()
+    }
 }

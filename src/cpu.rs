@@ -27,11 +27,11 @@ impl CPU {
     }
 
     pub fn do_cycle(&mut self) -> u32 {
-        let ticks = self.do_cycle() * 4;
+        let ticks = self.cycle() * 4;
         self.mmu.do_cycle(ticks)
     }
 
-    fn docycle(&mut self) -> u32 {
+    fn cycle(&mut self) -> u32 {
         self.updateime();
         match self.handle_interrupts() {
             0 => {}
@@ -206,10 +206,10 @@ impl CPU {
                 self.regs.flag(Z, false);
                 1
             }
-            0x10 => {
-                self.mmu.switch_speed();
-                1
-            } // STOP
+            // 0x10 => {
+            //     self.mmu.switch_speed();
+            //     1
+            // } // STOP
             0x11 => {
                 let v = self.fetchword();
                 self.regs.setde(v);
@@ -274,7 +274,7 @@ impl CPU {
                 1
             }
             0x20 => {
-                if !self.regs.getflag(Z) {
+                if !self.regs.get_flag(Z) {
                     self.cpu_jr();
                     3
                 } else {
@@ -313,7 +313,7 @@ impl CPU {
                 1
             }
             0x28 => {
-                if self.regs.getflag(Z) {
+                if self.regs.get_flag(Z) {
                     self.cpu_jr();
                     3
                 } else {
@@ -354,7 +354,7 @@ impl CPU {
                 1
             }
             0x30 => {
-                if !self.regs.getflag(C) {
+                if !self.regs.get_flag(C) {
                     self.cpu_jr();
                     3
                 } else {
@@ -400,7 +400,7 @@ impl CPU {
                 1
             }
             0x38 => {
-                if self.regs.getflag(C) {
+                if self.regs.get_flag(C) {
                     self.cpu_jr();
                     3
                 } else {
@@ -433,7 +433,7 @@ impl CPU {
                 2
             }
             0x3F => {
-                let v = !self.regs.getflag(C);
+                let v = !self.regs.get_flag(C);
                 self.regs.flag(C, v);
                 self.regs.flag(H, false);
                 self.regs.flag(N, false);
@@ -940,7 +940,7 @@ impl CPU {
                 1
             }
             0xC0 => {
-                if !self.regs.getflag(Z) {
+                if !self.regs.get_flag(Z) {
                     self.regs.pc = self.popstack();
                     5
                 } else {
@@ -953,7 +953,7 @@ impl CPU {
                 3
             }
             0xC2 => {
-                if !self.regs.getflag(Z) {
+                if !self.regs.get_flag(Z) {
                     self.regs.pc = self.fetchword();
                     4
                 } else {
@@ -966,7 +966,7 @@ impl CPU {
                 4
             }
             0xC4 => {
-                if !self.regs.getflag(Z) {
+                if !self.regs.get_flag(Z) {
                     self.pushstack(self.regs.pc + 2);
                     self.regs.pc = self.fetchword();
                     6
@@ -990,7 +990,7 @@ impl CPU {
                 4
             }
             0xC8 => {
-                if self.regs.getflag(Z) {
+                if self.regs.get_flag(Z) {
                     self.regs.pc = self.popstack();
                     5
                 } else {
@@ -1002,7 +1002,7 @@ impl CPU {
                 4
             }
             0xCA => {
-                if self.regs.getflag(Z) {
+                if self.regs.get_flag(Z) {
                     self.regs.pc = self.fetchword();
                     4
                 } else {
@@ -1012,7 +1012,7 @@ impl CPU {
             }
             0xCB => self.call_cb(),
             0xCC => {
-                if self.regs.getflag(Z) {
+                if self.regs.get_flag(Z) {
                     self.pushstack(self.regs.pc + 2);
                     self.regs.pc = self.fetchword();
                     6
@@ -1037,7 +1037,7 @@ impl CPU {
                 4
             }
             0xD0 => {
-                if !self.regs.getflag(C) {
+                if !self.regs.get_flag(C) {
                     self.regs.pc = self.popstack();
                     5
                 } else {
@@ -1050,7 +1050,7 @@ impl CPU {
                 3
             }
             0xD2 => {
-                if !self.regs.getflag(C) {
+                if !self.regs.get_flag(C) {
                     self.regs.pc = self.fetchword();
                     4
                 } else {
@@ -1059,7 +1059,7 @@ impl CPU {
                 }
             }
             0xD4 => {
-                if !self.regs.getflag(C) {
+                if !self.regs.get_flag(C) {
                     self.pushstack(self.regs.pc + 2);
                     self.regs.pc = self.fetchword();
                     6
@@ -1083,7 +1083,7 @@ impl CPU {
                 4
             }
             0xD8 => {
-                if self.regs.getflag(C) {
+                if self.regs.get_flag(C) {
                     self.regs.pc = self.popstack();
                     5
                 } else {
@@ -1096,7 +1096,7 @@ impl CPU {
                 4
             }
             0xDA => {
-                if self.regs.getflag(C) {
+                if self.regs.get_flag(C) {
                     self.regs.pc = self.fetchword();
                     4
                 } else {
@@ -1105,7 +1105,7 @@ impl CPU {
                 }
             }
             0xDC => {
-                if self.regs.getflag(C) {
+                if self.regs.get_flag(C) {
                     self.pushstack(self.regs.pc + 2);
                     self.regs.pc = self.fetchword();
                     6
@@ -1229,11 +1229,6 @@ impl CPU {
                 let v = self.fetch_byte();
                 self.alu_cp(v);
                 2
-            }
-            0xFF => {
-                self.pushstack(self.regs.pc);
-                self.regs.pc = 0x38;
-                4
             }
             other => panic!("Instruction {:2X} is not implemented", other),
         }
@@ -2330,7 +2325,6 @@ impl CPU {
                 self.regs.a = self.regs.a | (1 << 7);
                 2
             }
-            other => 0xFF,
         }
     }
 

@@ -2,14 +2,16 @@ use crate::hram::{Hram, HRAM_END, HRAM_START};
 use crate::joypad::Joypad;
 use crate::ppu::{Ppu, OAM_END, OAM_START, VRAM_END, VRAM_START};
 use crate::rom::{Rom, ERAM_END, ERAM_START, ROM_BANK_END, ROM_START};
+use crate::timer::Timer;
 use crate::wram::{Wram, ECHO_END, ECHO_START, WRAM_END, WRAM_START};
 
 pub struct Mmu {
-    rom: Rom,
-    ppu: Ppu,
-    wram: Wram,
-    hram: Hram,
-    joypad: Joypad,
+    pub rom: Rom,
+    pub ppu: Ppu,
+    pub wram: Wram,
+    pub hram: Hram,
+    pub joypad: Joypad,
+    pub timer: Timer,
     pub inte: u8,
     pub intf: u8,
     wram_bank: u8,
@@ -24,11 +26,30 @@ impl Mmu {
             wram: Wram::new(),
             hram: Hram::new(),
             joypad: Joypad::new(),
+            timer: Timer::new(),
             inte: 0,
             intf: 0,
             wram_bank: 1,
             vram_bank: 1,
         }
+    }
+
+    pub fn do_cycle(&mut self, ticks: u32) -> u32 {
+        // let ppu_ticks = ticks / vram_ticks;
+        // let cpu_ticks = ticks + vram_ticks;
+
+        self.timer.do_cycle(ticks);
+        self.intf  |= self.timer.interrupt;
+        self.timer.interrupt = 0;
+
+        self.intf |= self.joypad.interrupt;
+        self.joypad.interrupt = 0;
+
+        self.ppu.do_cycle(ticks);
+        self.intf |= self.ppu.interrupt;
+        self.ppu.interrupt = 0;
+
+        return ticks
     }
 
     pub fn rb(&mut self, a: u16) -> u8 {
@@ -64,6 +85,11 @@ impl Mmu {
 
     pub fn rw(&mut self, address: u16) -> u16 {
         (self.rb(address) as u16) | ((self.rb(address + 1) as u16) << 8)
+    }
+
+    pub fn ww(&mut self, a: u16, v: u16) {
+        self.wb(a, (v & 0xFF) as u8);
+        self.wb(a + 1, (v >> 8) as u8)
     }
 
 }

@@ -24,7 +24,7 @@ pub struct Ppu {
     wx: u8,
     mode: u8,
     mode_clock: u32,
-    pub inte: u8,
+    pub interrupt: u8,
 }
 
 impl Ppu {
@@ -47,8 +47,12 @@ impl Ppu {
             wx: 0,
             mode: 0,
             mode_clock: 0,
-            inte: 0,
+            interrupt: 0,
         }
+    }
+
+    pub fn do_cycle(&mut self, ticks: u32) -> u32 {
+        return 0;
     }
 
     pub fn rb(&self, a: u16) -> u8 {

@@ -32,3 +32,7 @@ fn main() -> Result<()> {
     let device = Device::new(&args.rom, args.save_state)?;
     Ok(())
 }
+
+fn run_device(mut device: Device) {
+    
+}

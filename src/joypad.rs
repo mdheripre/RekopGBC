@@ -1,5 +1,3 @@
-use winit::keyboard::Key;
-
 pub struct Joypad {
     action: bool,
     direction: bool,
@@ -11,7 +9,7 @@ pub struct Joypad {
     b: bool,
     start: bool,
     select: bool,
-    pub inte: u8,
+    pub interrupt: u8,
 }
 
 #[derive(Clone, Copy)]
@@ -39,7 +37,7 @@ impl Joypad {
             b: false,
             start: false,
             select: false,
-            inte: 0,
+            interrupt: 0,
         }
     }
 
@@ -106,7 +104,7 @@ impl Joypad {
         }
 
         if !was_pressed {
-            self.inte |= 0x10
+            self.interrupt |= 0x10
         }
     }
 

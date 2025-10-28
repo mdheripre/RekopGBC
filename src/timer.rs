@@ -8,7 +8,7 @@ pub struct Timer {
     div: u8,
     internal_div: u32,
     internal_counter: u32,
-    interrupt: u8,
+    pub interrupt: u8,
 }
 
 impl Timer {

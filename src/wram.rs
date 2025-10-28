@@ -39,5 +39,7 @@ impl Wram {
         }
     }
 
-    pub fn wb(&mut self, a: u16, v: u8) {}
+    pub fn wb(&mut self, a: u16, v: u8) {
+        self.wram[self.wram_bank][a as usize] = v
+    }
 }

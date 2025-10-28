@@ -8,6 +8,5 @@ mod mmu;
 mod ppu;
 mod registers;
 mod rom;
-mod serial;
 mod timer;
 mod wram;

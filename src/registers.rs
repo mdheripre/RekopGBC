@@ -55,6 +55,12 @@ impl Registers {
         ((self.h as u16) << 8) | ((self.l & 0xF0) as u16)
     }
 
+    pub fn hld(&mut self) -> u16 {
+        let res = self.hl();
+        self.sethl(res - 1);
+        res
+    }
+
     pub fn hli(&mut self) -> u16 {
         let res = self.hl();
         self.sethl(res + 1);

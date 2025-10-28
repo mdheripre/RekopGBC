@@ -17,5 +17,7 @@ impl Hram {
         self.bytes[a as usize]
     }
 
-    pub fn wb(&mut self, a: u16, v: u8) {}
+    pub fn wb(&mut self, a: u16, v: u8) {
+        self.bytes[a as usize] = v
+    }
 }
