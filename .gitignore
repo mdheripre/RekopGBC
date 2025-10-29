@@ -7,5 +7,5 @@ secrets.json
 /target
 Cargo.lock
 
-rekopGBC.exe
-rekopGBC
+rekop_gbc.exe
+rekop_gbc
