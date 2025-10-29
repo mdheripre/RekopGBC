@@ -51,6 +51,10 @@ impl Ppu {
         }
     }
 
+    pub fn get_vram(&self) -> Vec<u8> {
+        self.vram.concat()
+    }
+
     pub fn do_cycle(&mut self, ticks: u32) -> u32 {
         return 0;
     }

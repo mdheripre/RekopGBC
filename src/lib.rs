@@ -1,4 +1,5 @@
 pub mod device;
+pub mod window;
 pub use crate::error::{EmulatorError, Result};
 mod cpu;
 mod error;
