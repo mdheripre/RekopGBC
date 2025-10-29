@@ -3,9 +3,9 @@ use std::sync::mpsc::{Receiver, Sender};
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
-use winit::window::{Window, WindowId};
-use winit::keyboard::PhysicalKey;
 use winit::keyboard::KeyCode;
+use winit::keyboard::PhysicalKey;
+use winit::window::{Window, WindowId};
 
 pub enum GBEvent {
     ArrowDown,
@@ -16,14 +16,11 @@ pub struct App {
     window: Option<Window>,
     sender: Sender<GBEvent>,
     pub receiver: Receiver<Vec<u8>>,
-    data: Option<Vec<u8>>
+    data: Option<Vec<u8>>,
 }
 
 impl App {
-    pub fn new(
-        sender: Sender<GBEvent>,
-        receiver: Receiver<Vec<u8>>,
-    ) -> App {
+    pub fn new(sender: Sender<GBEvent>, receiver: Receiver<Vec<u8>>) -> App {
         App {
             window: None,
             sender,
@@ -90,14 +87,14 @@ impl ApplicationHandler for App {
                             eprintln!("Send error: backend disconnected, exiting..");
                             event_loop.exit();
                         }
-                    },
+                    }
                     PhysicalKey::Code(KeyCode::ArrowDown) => {
                         if self.sender.send(GBEvent::ArrowDown).is_err() {
                             eprintln!("Send error: backend disconnected, exiting..");
                             event_loop.exit();
                         }
-                    },
-                    _ => {},
+                    }
+                    _ => {}
                 }
                 println!("Keyboard key pressed: {:?}", event.physical_key)
             }

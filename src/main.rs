@@ -3,8 +3,11 @@ use std::sync::mpsc::{self, Receiver, Sender, SyncSender, TryRecvError, TrySendE
 use anyhow::{anyhow, Error};
 use clap::Parser;
 use log::info;
-use rekop_gbc::{device::Device, window::{App, GBEvent}};
-use winit::{event_loop::{self, EventLoop}};
+use rekop_gbc::{
+    device::Device,
+    window::{App, GBEvent},
+};
+use winit::event_loop::{self, EventLoop};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -47,30 +50,28 @@ fn main() -> Result<(), Error> {
 }
 
 fn run_device(mut device: Device, sender: SyncSender<Vec<u8>>, receiver: Receiver<GBEvent>) {
-        'outer: loop {
-            // device.do_cycle();
-            let data = device.ppu_data();
-            if let Err(TrySendError::Disconnected(..)) = sender.try_send(data) {
-                eprintln!("Send error: frontend disconnected, exiting..");
-                break 'outer;
-            }
+    'outer: loop {
+        // device.do_cycle();
+        let data = device.ppu_data();
+        if let Err(TrySendError::Disconnected(..)) = sender.try_send(data) {
+            eprintln!("Send error: frontend disconnected, exiting..");
+            break 'outer;
+        }
 
-            'recv: loop {
-                match receiver.try_recv() {
-                    Ok(event) => match event {
-                        GBEvent::ArrowUp => {},
-                        GBEvent::ArrowDown => {},
-                    },
-                    Err(TryRecvError::Empty) => {
-                        break 'recv
-                    }
-                    Err(TryRecvError::Disconnected) => {
-                        eprintln!("Recv error: frontend disconnected, exiting..");
-                        break 'outer
-                    }
+        'recv: loop {
+            match receiver.try_recv() {
+                Ok(event) => match event {
+                    GBEvent::ArrowUp => {}
+                    GBEvent::ArrowDown => {}
+                },
+                Err(TryRecvError::Empty) => break 'recv,
+                Err(TryRecvError::Disconnected) => {
+                    eprintln!("Recv error: frontend disconnected, exiting..");
+                    break 'outer;
                 }
             }
         }
+    }
 }
 
 fn run_window(sender: Sender<GBEvent>, receiver: Receiver<Vec<u8>>) -> Result<(), Error> {
