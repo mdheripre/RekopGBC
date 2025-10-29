@@ -39,7 +39,7 @@ impl Mmu {
         // let cpu_ticks = ticks + vram_ticks;
 
         self.timer.do_cycle(ticks);
-        self.intf  |= self.timer.interrupt;
+        self.intf |= self.timer.interrupt;
         self.timer.interrupt = 0;
 
         self.intf |= self.joypad.interrupt;
@@ -49,7 +49,7 @@ impl Mmu {
         self.intf |= self.ppu.interrupt;
         self.ppu.interrupt = 0;
 
-        return ticks
+        return ticks;
     }
 
     pub fn rb(&mut self, a: u16) -> u8 {
@@ -91,5 +91,4 @@ impl Mmu {
         self.wb(a, (v & 0xFF) as u8);
         self.wb(a + 1, (v >> 8) as u8)
     }
-
 }
