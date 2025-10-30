@@ -57,9 +57,9 @@ impl Ppu {
         for y in 0..144 {
             for x in 0..160 {
                 let pixel_index = y * 160 + x;
-                let r = (x % 96) as u8;
-                let g = (y % 96) as u8;
-                let b = ((x + y) % 96) as u8;
+                let r = (x % 255) as u8;
+                let g = (y % 255) as u8;
+                let b = ((x + y) % 255) as u8;
 
                 framebuffer[pixel_index] =
                     (0xFF << 24) | ((r as u32) << 16) | ((g as u32) << 8) | (b as u32);

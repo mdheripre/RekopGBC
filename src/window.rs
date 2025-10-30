@@ -96,7 +96,9 @@ impl ApplicationHandler for App {
                                 )
                                 .unwrap();
 
-                            surface.buffer_mut().unwrap().copy_from_slice(data);
+                            let mut buffer = surface.buffer_mut().unwrap();
+                            buffer.copy_from_slice(data);
+                            buffer.present().unwrap();
                         }
                     }
                 }
