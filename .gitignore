@@ -3,6 +3,7 @@
 *.pem
 *.log
 secrets.json
+.vscode/
 
 /target
 Cargo.lock

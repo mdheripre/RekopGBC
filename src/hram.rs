@@ -14,10 +14,12 @@ impl Hram {
     }
 
     pub fn rb(&self, a: u16) -> u8 {
-        self.bytes[a as usize]
+        let offset = (a - HRAM_START) as usize;
+        self.bytes[offset]
     }
 
     pub fn wb(&mut self, a: u16, v: u8) {
-        self.bytes[a as usize] = v
+        let offset = (a - HRAM_START) as usize;
+        self.bytes[offset] = v
     }
 }

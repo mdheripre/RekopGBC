@@ -49,7 +49,7 @@ impl Mmu {
         self.intf |= self.ppu.interrupt;
         self.ppu.interrupt = 0;
 
-        return ticks;
+        ticks
     }
 
     pub fn rb(&mut self, a: u16) -> u8 {

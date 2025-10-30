@@ -51,7 +51,7 @@ fn main() -> Result<(), Error> {
 
 fn run_device(mut device: Device, sender: SyncSender<Vec<u8>>, receiver: Receiver<GBEvent>) {
     'outer: loop {
-        // device.do_cycle();
+        device.do_cycle();
         let data = device.ppu_data();
         if let Err(TrySendError::Disconnected(..)) = sender.try_send(data) {
             eprintln!("Send error: frontend disconnected, exiting..");

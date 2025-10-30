@@ -77,7 +77,7 @@ impl CPU {
     }
 
     fn handle_interrupts(&mut self) -> u32 {
-        if self.ime == false && self.halted == false {
+        if !self.ime && !self.halted {
             return 0;
         }
 
@@ -87,7 +87,7 @@ impl CPU {
         }
 
         self.halted = false;
-        if self.ime == false {
+        if !self.ime {
             return 0;
         }
         self.ime = false;
