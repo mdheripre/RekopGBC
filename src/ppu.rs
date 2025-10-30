@@ -51,12 +51,26 @@ impl Ppu {
         }
     }
 
-    pub fn get_vram(&self) -> Vec<u8> {
-        self.vram.concat()
+    pub fn get_framebuffer(&self) -> Vec<u32> {
+        let mut framebuffer = vec![0u32; 160 * 144];
+
+        for y in 0..144 {
+            for x in 0..160 {
+                let pixel_index = y * 160 + x;
+                let r = (x % 96) as u8;
+                let g = (y % 96) as u8;
+                let b = ((x + y) % 96) as u8;
+
+                framebuffer[pixel_index] =
+                    (0xFF << 24) | ((r as u32) << 16) | ((g as u32) << 8) | (b as u32);
+            }
+        }
+
+        framebuffer
     }
 
     pub fn do_cycle(&mut self, ticks: u32) -> u32 {
-        return 0;
+        0
     }
 
     pub fn rb(&self, a: u16) -> u8 {

@@ -14,7 +14,7 @@ log = "0.4.28"
 env_logger = "0.11.8"
 clippy = "0.0.302"
 tokio = { version = "1.48.0", features = ["full"] }
-glium = "0.36.0"
+softbuffer = "0.4.6"
 
 [profile.dev]
 opt-level = 0

@@ -8,6 +8,7 @@ mod joypad;
 mod mmu;
 mod ppu;
 mod registers;
+mod render;
 mod rom;
 mod timer;
 mod wram;

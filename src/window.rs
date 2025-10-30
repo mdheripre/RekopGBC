@@ -1,6 +1,10 @@
+use std::num::NonZeroU32;
 use std::sync::mpsc::{Receiver, Sender};
+use std::sync::Arc;
 
+use softbuffer::{Context, Surface};
 use winit::application::ApplicationHandler;
+use winit::dpi::{PhysicalSize};
 use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
 use winit::keyboard::KeyCode;
@@ -13,30 +17,42 @@ pub enum GBEvent {
 }
 
 pub struct App {
-    window: Option<Window>,
+    window: Option<Arc<Window>>,
     sender: Sender<GBEvent>,
-    pub receiver: Receiver<Vec<u8>>,
-    data: Option<Vec<u8>>,
+    pub receiver: Receiver<Vec<u32>>,
+    data: Option<Vec<u32>>,
+    surface: Option<Surface<Arc<Window>, Arc<Window>>>,
 }
 
 impl App {
-    pub fn new(sender: Sender<GBEvent>, receiver: Receiver<Vec<u8>>) -> App {
+    pub fn new(sender: Sender<GBEvent>, receiver: Receiver<Vec<u32>>) -> App {
         App {
             window: None,
             sender,
             receiver,
             data: None,
+            surface: None,
         }
     }
 }
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        self.window = Some(
+        let window = Arc::new(
             event_loop
-                .create_window(Window::default_attributes().with_title("RekopGBC"))
+                .create_window(
+                    Window::default_attributes()
+                        .with_title("RekopGBC")
+                        .with_inner_size(PhysicalSize::new(160, 144))
+                        .with_resizable(false),
+                )
                 .unwrap(),
-        )
+        );
+
+        let context = Context::new(window.clone()).unwrap();
+        let surface = Surface::new(&context, window.clone()).unwrap();
+        self.surface = Some(surface);
+        self.window = Some(window);
     }
 
     fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
@@ -44,7 +60,6 @@ impl ApplicationHandler for App {
 
         while let Ok(data) = self.receiver.try_recv() {
             self.data = Some(data);
-            // TODO: transform Vec<u8> into pixels
         }
 
         if self.data.is_some() {
@@ -66,8 +81,24 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                if let Some(pixels) = &self.data {
-                    // TBD pixel rendering
+                if let Some(data) = &self.data {
+                    if let Some(window) = &self.window {
+                        if let Some(surface) = &mut self.surface {
+                            let (width, height) = {
+                                let size = window.inner_size();
+                                (size.width, size.height)
+                            };
+
+                            surface
+                                .resize(
+                                    NonZeroU32::new(width).unwrap(),
+                                    NonZeroU32::new(height).unwrap(),
+                                )
+                                .unwrap();
+
+                            surface.buffer_mut().unwrap().copy_from_slice(data);
+                        }
+                    }
                 }
             }
             WindowEvent::Resized(size) => {

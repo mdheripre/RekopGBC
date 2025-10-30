@@ -49,7 +49,7 @@ fn main() -> Result<(), Error> {
     Ok(())
 }
 
-fn run_device(mut device: Device, sender: SyncSender<Vec<u8>>, receiver: Receiver<GBEvent>) {
+fn run_device(mut device: Device, sender: SyncSender<Vec<u32>>, receiver: Receiver<GBEvent>) {
     'outer: loop {
         device.do_cycle();
         let data = device.ppu_data();
@@ -74,7 +74,7 @@ fn run_device(mut device: Device, sender: SyncSender<Vec<u8>>, receiver: Receive
     }
 }
 
-fn run_window(sender: Sender<GBEvent>, receiver: Receiver<Vec<u8>>) -> Result<(), Error> {
+fn run_window(sender: Sender<GBEvent>, receiver: Receiver<Vec<u32>>) -> Result<(), Error> {
     let event_loop = EventLoop::new().expect("Failed to create event Loop");
     event_loop.set_control_flow(event_loop::ControlFlow::Poll);
 
