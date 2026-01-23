@@ -22,7 +22,7 @@ impl Device {
         self.cpu.do_cycle()
     }
 
-    pub fn ppu_data(&self) -> Vec<u32> {
+    pub fn ppu_data(&mut self) -> &Vec<u32> {
         self.cpu.mmu.ppu.get_framebuffer()
     }
 }

@@ -4,12 +4,14 @@ use std::sync::Arc;
 
 use softbuffer::{Context, Surface};
 use winit::application::ApplicationHandler;
-use winit::dpi::{PhysicalSize};
+use winit::dpi::PhysicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
 use winit::keyboard::KeyCode;
 use winit::keyboard::PhysicalKey;
 use winit::window::{Window, WindowId};
+
+use crate::ppu::{SCREEN_HEIGHT, SCREEN_WIDTH};
 
 pub enum GBEvent {
     ArrowDown,
